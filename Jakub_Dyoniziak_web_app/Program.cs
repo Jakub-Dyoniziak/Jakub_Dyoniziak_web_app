@@ -6,7 +6,7 @@ using Jakub_Dyoniziak_web_app.Constants;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite("Data Source=app.db"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -48,15 +48,21 @@ app.MapRazorPages();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-    string[] roles = { Roles.Ankieter, Roles.Respondent };
+    string[] roles = { Roles.Respondent, Roles.Ankieter };
 
     foreach (var role in roles)
     {
         if (!await roleManager.RoleExistsAsync(role))
-        {
+
             await roleManager.CreateAsync(new IdentityRole(role));
-        }
+    }
+
+    var user = await userManager.FindByEmailAsync("ankietertest@test.pl");
+    if (user != null && !await userManager.IsInRoleAsync(user, "Ankieter"))
+    {
+        await userManager.AddToRoleAsync(user, "Ankieter");
     }
 }
 

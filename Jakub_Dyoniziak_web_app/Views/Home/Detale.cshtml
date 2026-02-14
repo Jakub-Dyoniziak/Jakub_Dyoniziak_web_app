@@ -1,0 +1,21 @@
+﻿@model Jakub_Dyoniziak_web_app.Models.Survey
+
+<h2>@Model.Title</h2>
+
+@if ((bool)ViewBag.HasVoted)
+{
+    <p>Głos został już oddane.</p>
+}
+else
+{
+    <form asp-action="Vote" method="post">
+        @foreach (var option in Model.Options)
+        {
+            <div>
+                <input type="radio" name="optionId" value="@option.Id" />
+                @option.Text
+            </div>
+        }
+        <button type="submit">Głosuj</button>
+    </form>
+}

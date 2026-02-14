@@ -2,7 +2,7 @@
 {
     public static class Roles
     {
-        public const string Ankieter = "Ankieter";
         public const string Respondent = "Respondent";
+        public const string Ankieter = "Ankieter";
     }
 }

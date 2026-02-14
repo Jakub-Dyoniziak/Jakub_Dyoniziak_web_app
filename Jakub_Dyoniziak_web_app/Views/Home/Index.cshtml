@@ -1,8 +1,26 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model IEnumerable<Jakub_Dyoniziak_web_app.Models.Survey>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Ankiety</h2>
+
+<ul>
+    @foreach (var survey in Model)
+    {
+        <div>
+            <h3>@survey.Title</h3>
+            <a asp-controller="Survey"
+               asp-action="Details"
+               asp-route-id="@survey.Id">
+                Zobacz wyniki
+            </a>
+        </div>
+    }
+</ul>
+
+@if (User.IsInRole("Ankieter"))
+{
+    <p>
+        <a asp-controller="Survey" asp-action="Create">
+            Dodaj nową ankietę
+        </a>
+    </p>
+}

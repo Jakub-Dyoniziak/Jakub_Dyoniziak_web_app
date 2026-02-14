@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
 
 namespace Jakub_Dyoniziak_web_app.Models
 {
@@ -10,8 +11,10 @@ namespace Jakub_Dyoniziak_web_app.Models
         public Option Option { get; set; } = null!;
 
         [Required]
-        public string UserID { get; set; } = string.Empty;
+        public string UserId { get; set; } = string.Empty;
 
-        public DateTime CreateAt { get; set; } = DateTime.UtcNow;
+        public IdentityUser User { get; set; } = null!;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

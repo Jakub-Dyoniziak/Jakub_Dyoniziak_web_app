@@ -1,0 +1,19 @@
+﻿@model Survey
+
+<h2>Nowa ankieta</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Tytuł:</label>
+        <input asp-for="Title" />
+    </div>
+
+    <div>
+        <label>Opcje:</label>
+        <input name="options" />
+        <input name="options" />
+        <input name="options" />
+    </div>
+
+    <button type="submit">Utwórz</button>
+</form>

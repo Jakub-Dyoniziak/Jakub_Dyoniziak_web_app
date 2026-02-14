@@ -1,0 +1,86 @@
+﻿@model Survey
+
+<h2>@Model.Title</h2>
+
+@{
+    var totalVotes = Model.Options.Sum(o => o.Votes.Count);
+}
+
+@if (totalVotes == 0)
+{
+    <p>Brak głosów.</p>
+}
+else
+{
+    <ul>
+        @foreach (var option in Model.Options)
+        {
+            var voteCount = option.Votes.Count;
+            var percentage = totalVotes == 0 ? 0 :
+            (int)((double)voteCount / totalVotes * 100);
+
+            <li>
+                @option.Text —
+                @voteCount głosów
+                (@percentage%)
+            </li>
+        }
+    </ul>
+    <canvas id="resultsChart" width="400" height="200"></canvas>
+}
+
+@if (User.IsInRole("Respondent"))
+{
+    <form asp-controller="Survey" asp-action="Vote" method="post">
+        @foreach (var option in Model.Options)
+        {
+            <div>
+                <input type="radio" name="optionId" value="@option.Id" required />
+                @option.Text
+            </div>
+        }
+
+        <button type="submit">Głosuj</button>
+    </form>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var labels = [
+            @foreach (var option in Model.Options)
+            {
+                    @: "@option.Text",
+            }
+        ];
+
+        var data = [
+            @foreach (var option in Model.Options)
+            {
+                    @: @option.Votes.Count,
+            }
+        ];
+
+        var ctx = document.getElementById('resultsChart').getContext('2d');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Liczba głosów',
+                    data: data
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+}

@@ -1,21 +1,24 @@
-using System.Diagnostics;
+using Jakub_Dyoniziak_web_app.Data;
 using Jakub_Dyoniziak_web_app.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace Jakub_Dyoniziak_web_app.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var surveys = await _context.Surveys.ToListAsync();
+            return View(surveys);
         }
 
         public IActionResult Privacy()
